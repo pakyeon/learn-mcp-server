@@ -1,13 +1,18 @@
-import asyncio
-from fastmcp import Client
+# my_server.py
+from fastmcp import FastMCP
 
-client = Client("http://localhost:8000/mcp")
-
-
-async def call_tool(name: str):
-    async with client:
-        result = await client.call_tool("greet", {"name": name})
-        print(result)
+mcp = FastMCP(name="MyServer")
 
 
-asyncio.run(call_tool("Ford"))
+@mcp.tool
+def greet(name: str) -> str:
+    """Greet a user by name."""
+    return f"Hello, {name}!"
+
+
+if __name__ == "__main__":
+    # This runs the server, defaulting to STDIO transport
+    mcp.run()
+
+    # To use a different transport, e.g., HTTP:
+    # mcp.run(transport="http", host="127.0.0.1", port=9000)
